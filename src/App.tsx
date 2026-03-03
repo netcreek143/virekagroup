@@ -43,30 +43,47 @@ function TypingText({ text, className = "" }: { text: string; className?: string
     offset: ["start 0.95", "end 0.8"]
   });
 
-  const characters = text.split("");
-  const totalChars = characters.length;
+  const words = text.split(" ");
+  const totalChars = text.length;
+  let charIndexTracker = 0;
 
   return (
     <p ref={containerRef} className={`${className} flex flex-wrap`}>
-      {characters.map((char, i) => {
-        // Calculate the range for this specific character
-        const start = i / totalChars;
-        const end = (i + 1) / totalChars;
-
-        // Map the container's scroll progress to this character's opacity and position
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const y = useTransform(scrollYProgress, [start, end], [10, 0]);
-
+      {words.map((word, i) => {
+        const wordChars = word.split("");
         return (
-          <motion.span
-            key={i}
-            style={{ opacity, y }}
-            className="inline-block"
-          >
-            {char === " " ? "\u00A0" : char}
-          </motion.span>
+          <span key={i} className="inline-block whitespace-nowrap">
+            {wordChars.map((char) => {
+              const currentPos = charIndexTracker++;
+              const start = currentPos / totalChars;
+              const end = (currentPos + 1) / totalChars;
+
+              // eslint-disable-next-line react-hooks/rules-of-hooks
+              const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
+              // eslint-disable-next-line react-hooks/rules-of-hooks
+              const y = useTransform(scrollYProgress, [start, end], [10, 0]);
+
+              return (
+                <motion.span key={currentPos} style={{ opacity, y }} className="inline-block">
+                  {char}
+                </motion.span>
+              );
+            })}
+            {/* Handle the space after the word */}
+            {i < words.length - 1 && (
+              <motion.span
+                key={`space-${i}`}
+                style={{
+                  opacity: useTransform(scrollYProgress, [charIndexTracker / totalChars, (charIndexTracker + 1) / totalChars], [0, 1])
+                }}
+                className="inline-block"
+              >
+                &nbsp;
+              </motion.span>
+            )}
+            {/* Increment index for the space character */}
+            {(() => { if (i < words.length - 1) charIndexTracker++; return null; })()}
+          </span>
         );
       })}
     </p>
@@ -223,7 +240,7 @@ export default function App() {
                 </h2>
               </FadeUp>
               <TypingText
-                className="text-[28px] md:text-[39px] text-gray-500 leading-snug font-medium"
+                className="text-[28px] md:text-[39px] text-gray-500 leading-snug font-medium max-w-[850px]"
                 text='"Success comes to those who dream big, stay resilient, and create value that goes beyond business."'
               />
             </div>
