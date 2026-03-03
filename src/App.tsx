@@ -226,28 +226,28 @@ export default function App() {
 
       {/* ── Founders' Philosophy ─────────────────────────────────────────────── */}
       <section
-        className="w-full bg-[#f2f2f2] overflow-hidden relative flex items-center py-20 sm:py-24 md:py-32 lg:py-0 lg:aspect-[3456/1080] xl:aspect-[3456/974]"
+        className="w-full bg-[#f2f2f2] overflow-hidden relative flex items-center py-28 sm:py-36 md:py-48 lg:py-0 lg:aspect-[3456/1200] xl:aspect-[3456/974]"
       >
-        {/* SVG background: Adjusted positioning for responsiveness to avoid text overlap */}
+        {/* SVG background: Fine-tuned positioning to ensure decorative lines stay below the text on all devices */}
         <img
           src="/images/fouphilsecbg.svg"
           className="absolute inset-0 w-full h-full object-cover z-0 
                      object-bottom sm:object-center
-                     md:-translate-x-[0.5%] md:-translate-y-[2%] md:scale-[1.05] 
-                     opacity-90"
+                     md:-translate-x-[0.5%] md:translate-y-[6%] md:scale-[1.15] 
+                     opacity-90 pointer-events-none"
           alt=""
         />
 
         {/* Proportional positioning that adapts across breakpoints */}
-        <div className="relative z-10 w-full px-6 sm:px-10 md:pl-[12%] lg:pl-[18%] md:pr-[10%] lg:-translate-y-[5%]">
+        <div className="relative z-10 w-full px-6 sm:px-10 md:pl-[12%] lg:pl-[18%] md:pr-[10%] lg:-translate-y-[8%]">
           <div className="w-full text-left max-w-xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
             <FadeUp>
-              <h2 className="text-[#1A3673] text-[26px] sm:text-[32px] md:text-[clamp(1.8rem,4vw,2.6rem)] font-bold mb-3 sm:mb-4 md:mb-[0.4em] tracking-tight">
+              <h2 className="text-[#1A3673] text-[24px] sm:text-[30px] md:text-[clamp(1.6rem,3.8vw,2.6rem)] font-bold mb-3 sm:mb-4 md:mb-[0.4em] tracking-tight">
                 Founders' Philosophy
               </h2>
             </FadeUp>
             <TypingText
-              className="text-[18px] sm:text-[24px] md:text-[clamp(1.4rem,3.2vw,2.4rem)] text-gray-500 leading-relaxed md:leading-[1.35] font-medium max-w-[90vw] md:max-w-[1000px]"
+              className="text-[17px] sm:text-[22px] md:text-[clamp(1.3rem,3vw,2.4rem)] text-gray-500 leading-relaxed md:leading-[1.35] font-medium max-w-[90vw] md:max-w-[1000px]"
               text='"Success comes to those who dream big, stay resilient, and create value that goes beyond business."'
             />
           </div>
