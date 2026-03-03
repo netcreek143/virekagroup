@@ -33,28 +33,27 @@ function FadeUp({
   );
 }
 
-// ─── Scroll-driven Word-based Typing text component ──────────────────────────
+// ─── Scroll-driven Typing text component ─────────────────────────────────────
 function TypingText({ text, className = "" }: { text: string; className?: string }) {
   const containerRef = useRef<HTMLParagraphElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
+    // Start appearing when the container starts entering from the bottom
+    // Finish appearing when the container is fully visible
     offset: ["start 0.95", "end 0.8"]
   });
 
-  // Split text into words while preserving bold markers for extraction
-  const words = text.split(" ");
-  const totalWords = words.length;
+  const characters = text.split("");
+  const totalChars = characters.length;
 
   return (
-    <p ref={containerRef} className={`${className} flex flex-wrap justify-start items-start relative`}>
-      {words.map((word, i) => {
-        const start = i / totalWords;
-        const end = (i + 1) / totalWords;
+    <p ref={containerRef} className={`${className} flex flex-wrap`}>
+      {characters.map((char, i) => {
+        // Calculate the range for this specific character
+        const start = i / totalChars;
+        const end = (i + 1) / totalChars;
 
-        // Extract bold content if word starts/ends with **
-        const isBold = word.startsWith("**") || word.endsWith("**") || word.includes("**");
-        const cleanWord = word.replace(/\*\*/g, "");
-
+        // Map the container's scroll progress to this character's opacity and position
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
         // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -64,9 +63,9 @@ function TypingText({ text, className = "" }: { text: string; className?: string
           <motion.span
             key={i}
             style={{ opacity, y }}
-            className={`inline-block mr-[0.3em] mb-1 ${isBold ? "font-bold text-gray-900" : ""}`}
+            className="inline-block"
           >
-            {cleanWord}
+            {char === " " ? "\u00A0" : char}
           </motion.span>
         );
       })}
@@ -154,103 +153,86 @@ export default function App() {
       </section>
 
       {/* ── About Us ────────────────────────────────────────────────────────── */}
-      <div className="max-w-[1920px] mx-auto">
-        <section className="flex flex-col md:flex-row items-stretch overflow-hidden">
-          {/* Left – image */}
-          <FadeUp className="w-full md:w-1/2 flex relative" y={60}>
-            <img
-              src="/images/foundersimg.png"
-              alt="Founders of Vireka Group"
-              className="w-full h-full object-cover min-h-[400px] md:min-h-0"
-            />
-            <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 lg:px-24 lg:pb-16 text-white bg-gradient-to-t from-black/60 via-black/20 to-transparent">
-              <h3 className="text-2xl sm:text-3xl md:text-[32px] lg:text-[40px] font-bold leading-tight mb-2 tracking-tight">
-                Reka &amp; Vicky
-              </h3>
-              <p className="text-lg md:text-[20px] lg:text-[24px] font-light tracking-wide text-gray-200">
-                Founders of Vireka Group
-              </p>
-            </div>
-          </FadeUp>
+      <section className="flex flex-col md:flex-row items-stretch overflow-hidden">
+        {/* Left – image */}
+        <FadeUp className="w-full md:w-1/2 flex relative" y={60}>
+          <img
+            src="/images/foundersimg.png"
+            alt="Founders of Vireka Group"
+            className="w-full h-full object-cover min-h-[400px] md:min-h-0"
+          />
+          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 lg:px-24 lg:pb-16 text-white bg-gradient-to-t from-black/60 via-black/20 to-transparent">
+            <h3 className="text-2xl sm:text-3xl md:text-[32px] lg:text-[40px] font-bold leading-tight mb-2 tracking-tight">
+              Reka &amp; Vicky
+            </h3>
+            <p className="text-lg md:text-[20px] lg:text-[24px] font-light tracking-wide text-gray-200">
+              Founders of Vireka Group
+            </p>
+          </div>
+        </FadeUp>
 
-          {/* Right – copy */}
-          <FadeUp delay={0.2} className="w-full md:w-1/2 p-8 md:p-12 lg:p-20 xl:p-24 flex flex-col justify-center bg-white" y={40}>
-            <h2 className="text-3xl md:text-[40px] lg:text-[46px] font-bold mb-6 md:mb-8">About Us</h2>
-            <div className="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base lg:text-lg">
-              <p>
-                Vireka Group stands as a reflection of vision, ambition, and the belief that powerful
-                ideas can create lasting impact. The journey began in 1995, when its founders set out
-                with a shared entrepreneurial spirit to build ventures that enhance experiences and
-                redefine industries.
-              </p>
-              <p>
-                This vision took shape in 2008 with the formation of Vireka Group, a UK-based
-                conglomerate built on the pillars of trust, innovation, and continuous evolution.
-                Founded by Mr. Vicky and Mrs. Reka Vicky, the group has grown into a dynamic and
-                diversified organization with a strong presence across hospitality, entertainment, and
-                emerging business opportunities.
-              </p>
-              <p className="hidden lg:block">
-                With over 25 years of collective experience, the founders have cultivated a portfolio
-                that reflects both creative excellence and strategic growth. Their leadership, driven by
-                integrity and a passion for bringing ideas to life, continues to shape the direction of
-                the group.
-              </p>
-              <p>
-                Today, Vireka Group is not just a collection of businesses, but a platform that brings
-                together vision, experience, and execution, consistently creating value and setting new
-                benchmarks across industries.
-              </p>
-            </div>
-          </FadeUp>
-        </section>
-      </div>
+        {/* Right – copy */}
+        <FadeUp delay={0.2} className="w-full md:w-1/2 p-8 md:p-12 lg:p-20 xl:p-24 flex flex-col justify-center bg-white" y={40}>
+          <h2 className="text-3xl md:text-[40px] lg:text-[46px] font-bold mb-6 md:mb-8">About Us</h2>
+          <div className="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base lg:text-lg">
+            <p>
+              Vireka Group stands as a reflection of vision, ambition, and the belief that powerful
+              ideas can create lasting impact. The journey began in 1995, when its founders set out
+              with a shared entrepreneurial spirit to build ventures that enhance experiences and
+              redefine industries.
+            </p>
+            <p>
+              This vision took shape in 2008 with the formation of Vireka Group, a UK-based
+              conglomerate built on the pillars of trust, innovation, and continuous evolution.
+              Founded by Mr. Vicky and Mrs. Reka Vicky, the group has grown into a dynamic and
+              diversified organization with a strong presence across hospitality, entertainment, and
+              emerging business opportunities.
+            </p>
+            <p className="hidden lg:block">
+              With over 25 years of collective experience, the founders have cultivated a portfolio
+              that reflects both creative excellence and strategic growth. Their leadership, driven by
+              integrity and a passion for bringing ideas to life, continues to shape the direction of
+              the group.
+            </p>
+            <p>
+              Today, Vireka Group is not just a collection of businesses, but a platform that brings
+              together vision, experience, and execution, consistently creating value and setting new
+              benchmarks across industries.
+            </p>
+          </div>
+        </FadeUp>
+      </section>
 
       {/* ── Founders' Philosophy ─────────────────────────────────────────────── */}
       <section
-        className="w-full overflow-hidden flex items-center justify-center py-16 px-6 md:py-24 md:px-12 lg:py-32 bg-[#EDEDED]"
+        className="w-full overflow-hidden flex items-center justify-center p-6 md:p-20"
+        style={{
+          minHeight: '500px',
+          backgroundImage: "url('/images/fouphilsecbg.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundColor: '#f2f2f2',
+        }}
       >
-        <div className="max-w-6xl mx-auto w-full relative z-10 px-6 md:px-12 lg:px-24">
-          {/* Scaling container: Using vw for font sizes and SVG dimensions ensures proportional scaling */}
-          <div className="flex flex-col items-start relative pb-12 [font-size:clamp(1rem,4vw,2.5rem)]">
-            <FadeUp>
-              <h2 className="text-[#1A3673] font-bold mb-[1.5em] text-left tracking-tight text-[1.1em]">
-                Founders' Philosophy
-              </h2>
-            </FadeUp>
-
-            <div className="relative w-full">
-              <div className="relative pt-[0.5em] pl-[1.5em] md:pl-[2.2em]">
-                {/* Text with specific bolding and smart quotes as per Step 268 screenshot */}
-                <TypingText
-                  className="text-gray-500 leading-[1.3] font-medium relative z-10 text-[1em]"
-                  text="“Success comes to those who **dream big, stay resilient**, and **create value** that goes beyond business.”"
-                />
-
-                {/* Refined SVG hook from Step 268 with sharper angles and adjusted peak */}
-                <svg
-                  className="absolute top-0 left-0 w-full h-full pointer-events-none z-0 overflow-visible"
-                  viewBox="0 0 1000 150"
-                  preserveAspectRatio="none"
-                >
-                  <path
-                    d="M 12 5 L 12 60 L 330 60 L 360 100 L 395 60 L 650 60"
-                    stroke="#4B5563"
-                    strokeWidth="2.5"
-                    fill="none"
-                    strokeLinecap="square"
-                    strokeLinejoin="miter"
-                    className="opacity-40"
-                  />
-                </svg>
-              </div>
+        <div className="max-w-[1100px] mx-auto w-full relative z-10">
+          <div className="flex flex-col items-center justify-center -translate-x-[20px] -translate-y-[20px]">
+            <div className="w-full text-left max-w-5xl">
+              <FadeUp>
+                <h2 className="text-[#1A3673] text-[34px] md:text-[42px] font-bold mb-3">
+                  Founders' Philosophy
+                </h2>
+              </FadeUp>
+              <TypingText
+                className="text-[28px] md:text-[39px] text-gray-500 leading-snug font-medium"
+                text='"Success comes to those who dream big, stay resilient, and create value that goes beyond business."'
+              />
             </div>
           </div>
         </div>
       </section>
 
       {/* ── Our Ecosystem ───────────────────────────────────────────────────── */}
-      <section className="py-16 md:py-24 px-6 md:px-12 lg:px-24 xl:px-32 max-w-[1920px] mx-auto overflow-hidden" >
+      <section className="py-16 md:py-24 px-6 md:px-12 lg:px-24 xl:px-32 max-w-[1920px] mx-auto overflow-hidden">
         <FadeUp className="mb-12 md:mb-16">
           <h2 className="text-3xl md:text-[42px] lg:text-[50px] font-semibold text-black">Our Ecosystem of Businesses</h2>
           <p className="max-w-[750px] font-light text-black mt-4 text-base md:text-lg lg:text-[18.6px]">
@@ -266,7 +248,7 @@ export default function App() {
             className="w-full h-auto object-contain max-w-6xl lg:-mb-12 relative z-10"
           />
         </FadeUp>
-      </section >
+      </section>
 
       {/* ── Milestones & Memories ───────────────────────────────────────────── */}
       < section className="py-16 md:py-24 px-6 md:px-12 lg:px-24 xl:px-32 bg-white max-w-[1920px] mx-auto" >
