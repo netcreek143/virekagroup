@@ -233,8 +233,8 @@ export default function App() {
           className="absolute inset-0 w-full h-full object-cover z-0 
                      hidden md:block
                      md:translate-x-[40%] md:-translate-y-[20%]
-                     lg:-translate-x-[10%] lg:-translate-y-[10%]
-                     scale-[1.5] opacity-90 pointer-events-none transition-transform duration-500"
+                     lg:-translate-x-[0.5%] lg:-translate-y-[2%]
+                     lg:scale-[1.05] opacity-90 pointer-events-none transition-transform duration-500"
           alt=""
         />
 
