@@ -228,10 +228,10 @@ export default function App() {
       <section
         className="w-full bg-[#f2f2f2] overflow-hidden relative flex items-center py-20 md:py-0 md:aspect-[3456/974]"
       >
-        {/* SVG background as an absolute element to maintain precision */}
+        {/* SVG background: Slightly offset left and up per USER request */}
         <img
           src="/images/fouphilsecbg.svg"
-          className="absolute inset-0 w-full h-full object-cover z-0"
+          className="absolute inset-0 w-full h-full object-cover z-0 md:-translate-x-[2%] md:-translate-y-[2%] md:scale-[1.05]"
           alt=""
         />
 
