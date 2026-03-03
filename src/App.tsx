@@ -172,12 +172,16 @@ export default function App() {
       {/* ── About Us ────────────────────────────────────────────────────────── */}
       <section className="flex flex-col md:flex-row items-stretch overflow-hidden">
         {/* Left – image */}
-        <FadeUp className="w-full md:w-1/2 flex relative" y={60}>
-          <img
-            src="/images/foundersimg.png"
-            alt="Founders of Vireka Group"
-            className="w-full h-full object-cover min-h-[400px] md:min-h-0"
-          />
+        <FadeUp className="w-full md:w-1/2 flex relative bg-gray-50" y={60}>
+          <div className="w-full h-full relative aspect-[4/5] md:aspect-auto overflow-hidden">
+            <img
+              src="/images/foundersimg.png"
+              alt="Founders of Vireka Group"
+              className="w-full h-full object-cover transition-opacity duration-300"
+              onLoad={(e) => (e.currentTarget.style.opacity = '1')}
+              style={{ opacity: 0 }}
+            />
+          </div>
           <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 lg:px-24 lg:pb-16 text-white bg-gradient-to-t from-black/60 via-black/20 to-transparent">
             <h3 className="text-2xl sm:text-3xl md:text-[32px] lg:text-[40px] font-bold leading-tight mb-2 tracking-tight">
               Reka &amp; Vicky
@@ -240,7 +244,7 @@ export default function App() {
                 </h2>
               </FadeUp>
               <TypingText
-                className="text-[28px] md:text-[39px] text-gray-500 leading-snug font-medium max-w-[850px]"
+                className="text-[28px] md:text-[39px] text-gray-500 leading-snug font-medium max-w-[1000px]"
                 text='"Success comes to those who dream big, stay resilient, and create value that goes beyond business."'
               />
             </div>
@@ -304,8 +308,8 @@ export default function App() {
           ].map((card, i) => (
             <div key={i} className="group">
               <FadeUp delay={i * 0.15} y={50}>
-                <div className="flex flex-col hover:bg-gray-50 md:hover:bg-gray-100 transition-colors duration-300 p-0 md:p-6 md:-m-6 cursor-pointer h-full rounded-xl">
-                  <div className="overflow-hidden rounded-lg mb-6">
+                <div className="flex flex-col hover:bg-gray-50 md:hover:bg-gray-100 transition-colors duration-300 p-0 md:p-6 md:-m-6 cursor-pointer h-full">
+                  <div className="overflow-hidden mb-6">
                     <img
                       src={card.src}
                       alt={card.alt}
