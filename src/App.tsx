@@ -228,18 +228,19 @@ export default function App() {
       <section
         className="w-full bg-[#f2f2f2] overflow-hidden relative flex items-center py-28 sm:py-36 md:py-48 lg:py-0 lg:aspect-[3456/1200] xl:aspect-[3456/974]"
       >
-        {/* SVG background: Fine-tuned positioning to ensure decorative lines stay below the text on all devices */}
+        {/* SVG background: Precision positioning for each breakpoint per USER request */}
         <img
           src="/images/fouphilsecbg.svg"
           className="absolute inset-0 w-full h-full object-cover z-0 
-                     object-bottom sm:object-center
-                     md:-translate-x-[0.5%] md:translate-y-[6%] md:scale-[1.15] 
-                     opacity-90 pointer-events-none"
+                     translate-x-[30%]
+                     md:translate-x-[40%] md:-translate-y-[20%]
+                     lg:translate-x-[20%] lg:translate-y-0
+                     scale-[1.5] opacity-90 pointer-events-none transition-transform duration-500"
           alt=""
         />
 
         {/* Proportional positioning that adapts across breakpoints */}
-        <div className="relative z-10 w-full px-6 sm:px-10 md:pl-[12%] lg:pl-[18%] md:pr-[10%] lg:-translate-y-[8%]">
+        <div className="relative z-10 w-full px-6 sm:px-10 md:pl-[12%] lg:pl-[18%] md:pr-[10%]">
           <div className="w-full text-left max-w-xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
             <FadeUp>
               <h2 className="text-[#1A3673] text-[24px] sm:text-[30px] md:text-[clamp(1.6rem,3.8vw,2.6rem)] font-bold mb-3 sm:mb-4 md:mb-[0.4em] tracking-tight">
