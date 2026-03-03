@@ -231,7 +231,7 @@ export default function App() {
         {/* SVG background: Slightly offset left and up per USER request */}
         <img
           src="/images/fouphilsecbg.svg"
-          className="absolute inset-0 w-full h-full object-cover z-0 md:-translate-x-[2%] md:-translate-y-[2%] md:scale-[1.05]"
+          className="absolute inset-0 w-full h-full object-cover z-0 md:-translate-x-[0.5%] md:-translate-y-[2%] md:scale-[1.05]"
           alt=""
         />
 
