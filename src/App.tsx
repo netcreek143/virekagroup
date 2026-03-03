@@ -226,28 +226,27 @@ export default function App() {
 
       {/* ── Founders' Philosophy ─────────────────────────────────────────────── */}
       <section
-        className="w-full overflow-hidden flex items-center justify-center p-6 md:p-20"
-        style={{
-          minHeight: '500px',
-          backgroundImage: "url('/images/fouphilsecbg.png')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundColor: '#f2f2f2',
-        }}
+        className="w-full bg-[#f2f2f2] overflow-hidden relative flex items-center py-20 md:py-0 md:aspect-[3456/974]"
       >
-        <div className="max-w-[1100px] mx-auto w-full relative z-10">
-          <div className="flex flex-col items-center justify-center -translate-x-[20px] -translate-y-[20px]">
-            <div className="w-full text-left max-w-5xl">
-              <FadeUp>
-                <h2 className="text-[#1A3673] text-[34px] md:text-[42px] font-bold mb-3">
-                  Founders' Philosophy
-                </h2>
-              </FadeUp>
-              <TypingText
-                className="text-[28px] md:text-[39px] text-gray-500 leading-snug font-medium max-w-[1000px]"
-                text='"Success comes to those who dream big, stay resilient, and create value that goes beyond business."'
-              />
-            </div>
+        {/* SVG background as an absolute element to maintain precision */}
+        <img
+          src="/images/fouphilsecbg.svg"
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          alt=""
+        />
+
+        {/* Proportional positioning: 18% left pins the text to the SVG hook element */}
+        <div className="relative z-10 w-full px-8 md:pl-[18%] md:pr-[10%] md:-translate-y-[8%]">
+          <div className="w-full text-left max-w-5xl lg:max-w-6xl">
+            <FadeUp>
+              <h2 className="text-[#1A3673] text-[34px] md:text-[clamp(1.5rem,3.8vw,2.6rem)] font-bold mb-3 md:mb-[0.3em]">
+                Founders' Philosophy
+              </h2>
+            </FadeUp>
+            <TypingText
+              className="text-[28px] md:text-[clamp(1.2rem,3.2vw,2.4rem)] text-gray-500 leading-snug md:leading-[1.3] font-medium max-w-[1000px]"
+              text='"Success comes to those who dream big, stay resilient, and create value that goes beyond business."'
+            />
           </div>
         </div>
       </section>
