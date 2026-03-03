@@ -142,7 +142,7 @@ export default function App() {
       {/* ── Hero Section ────────────────────────────────────────────────────── */}
       <section
         ref={heroRef}
-        className="relative w-full overflow-hidden aspect-[3/3.8] md:aspect-[3456/1650]"
+        className="relative w-full overflow-hidden aspect-[3/3.8] md:aspect-[3456/1650] xl:aspect-[3456/1800]"
       >
         <motion.img
           src="/images/virekaherosec.png"
