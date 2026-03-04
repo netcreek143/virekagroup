@@ -194,6 +194,12 @@ export default function App() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    // Specifically block letters/special chars from the mobile field as they type
+    if (name === 'mobile') {
+      const numericValue = value.replace(/[^\d\s+-]/g, '');
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+      return;
+    }
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
@@ -524,6 +530,8 @@ export default function App() {
                 value={formData.name}
                 onChange={handleInputChange}
                 required
+                minLength={2}
+                maxLength={50}
                 placeholder="Name"
                 className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none cursor-text disabled:opacity-50"
                 disabled={isSubmitting}
@@ -534,6 +542,8 @@ export default function App() {
                 value={formData.mobile}
                 onChange={handleInputChange}
                 required
+                minLength={8}
+                maxLength={20}
                 placeholder="Contact Number"
                 className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none disabled:opacity-50"
                 disabled={isSubmitting}
