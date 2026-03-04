@@ -180,8 +180,7 @@ export default function App() {
 
   const heroImgY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
   const heroImgScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
-  const heroTextY = useTransform(scrollYProgress, [0, 1], ['0%', '10%']);
-  const heroTextOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
+  const heroTextY = useTransform(scrollYProgress, [0, 1], ['0%', '-150%']);
 
   // ── Navbar Scroll State ───────────────────────────────────────────────────
   const [isScrolled, setIsScrolled] = useState(false);
@@ -235,7 +234,7 @@ export default function App() {
 
         <motion.div
           className="absolute bottom-[8%] md:bottom-[10%] left-6 md:left-12 lg:left-24 xl:left-32 text-white z-10 max-w-[90%]"
-          style={{ y: heroTextY, opacity: heroTextOpacity }}
+          style={{ y: heroTextY }}
         >
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -251,22 +250,22 @@ export default function App() {
       </section>
 
       {/* ── About Us ────────────────────────────────────────────────────────── */}
-      <section className="flex flex-col md:flex-row items-stretch overflow-hidden">
+      <section className="flex flex-col md:flex-row items-stretch overflow-hidden lg:max-h-[600px]">
         {/* Left – image */}
         <div className="w-full md:w-1/2 flex relative bg-[#0f2347] overflow-hidden">
           <FadeUp className="w-full h-full flex flex-col relative" y={20} duration={0.4}>
-            <div className="w-full h-full relative aspect-[4/5] md:aspect-auto overflow-hidden">
+            <div className="w-full h-full relative aspect-[4/3] md:aspect-auto overflow-hidden">
               <img
                 src="/images/foundersimg.png"
                 alt="Founders of Vireka Group"
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 lg:px-24 lg:pb-16 text-white bg-gradient-to-t from-black/60 via-black/20 to-transparent">
-              <h3 className="text-2xl sm:text-3xl md:text-[32px] lg:text-[40px] font-bold leading-tight mb-2 tracking-tight">
+            <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-8 lg:px-16 lg:pb-12 text-white bg-gradient-to-t from-black/60 via-black/20 to-transparent">
+              <h3 className="text-xl sm:text-2xl md:text-[26px] lg:text-[32px] font-bold leading-tight mb-2 tracking-tight">
                 Reka &amp; Vicky
               </h3>
-              <p className="text-lg md:text-[20px] lg:text-[24px] font-light tracking-wide text-gray-200">
+              <p className="text-base md:text-[16px] lg:text-[20px] font-light tracking-wide text-gray-200">
                 Founders of Vireka Group
               </p>
             </div>
@@ -274,9 +273,9 @@ export default function App() {
         </div>
 
         {/* Right – copy */}
-        <FadeUp delay={0.2} className="w-full md:w-1/2 p-8 md:p-12 lg:p-20 xl:p-24 flex flex-col justify-center bg-white" y={40}>
-          <h2 className="text-3xl md:text-[40px] lg:text-[46px] font-bold mb-6 md:mb-8">About Us</h2>
-          <div className="space-y-4 md:space-y-6 text-gray-600 leading-relaxed text-sm md:text-base lg:text-lg">
+        <FadeUp delay={0.2} className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 xl:p-16 flex flex-col justify-center bg-white" y={40}>
+          <h2 className="text-2xl md:text-[32px] lg:text-[38px] font-bold mb-4 md:mb-6">About Us</h2>
+          <div className="space-y-3 md:space-y-4 text-gray-600 leading-relaxed text-sm md:text-sm lg:text-base">
             <p>
               Vireka Group stands as a reflection of vision, ambition, and the belief that powerful
               ideas can create lasting impact. The journey began in 1995, when its founders set out
