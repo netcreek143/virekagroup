@@ -474,25 +474,25 @@ export default function App() {
                 type="text"
                 required
                 placeholder="Name"
-                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none shadow-sm"
+                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none"
               />
               <input
                 type="tel"
                 required
                 placeholder="Contact Number"
-                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none shadow-sm"
+                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none"
               />
               <input
                 type="email"
                 required
                 placeholder="Email"
-                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none shadow-sm"
+                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none"
               />
               <textarea
                 placeholder="Message"
                 required
                 rows={4}
-                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 resize-none rounded-none shadow-sm"
+                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 resize-none rounded-none"
               />
               <div className="pt-4 md:pt-6">
                 <button
