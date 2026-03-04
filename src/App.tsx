@@ -182,6 +182,57 @@ export default function App() {
   const heroImgScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
   const heroTextY = useTransform(scrollYProgress, [0, 1], ['0%', '-150%']);
 
+  // ── Contact Form State ────────────────────────────────────────────────────
+  const [formData, setFormData] = useState({
+    name: '',
+    mobile: '',
+    email: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    // The user's new working macro URL
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3ytJwIi3s8kzY4ffGQYY__RfoY4zoHva3zFAEd9CxYWEkq-LJbUtPSfOC7IIG3Gw6/exec';
+
+    const data = {
+      formType: 'contact',
+      name: formData.name,
+      mobile: formData.mobile,
+      email: formData.email,
+      message: formData.message,
+      source: window.location.pathname
+    };
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      // no-cors doesn't return a readable response so we assume success if no throw
+      setSubmitStatus('success');
+      setFormData({ name: '', mobile: '', email: '', message: '' });
+      setTimeout(() => setSubmitStatus('idle'), 4000);
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   // ── Navbar Scroll State ───────────────────────────────────────────────────
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -460,46 +511,67 @@ export default function App() {
             </div>
           </FadeUp>
 
-          {/* Right column – form (Reverted to original non-card aesthetic) */}
+          {/* Right column – form */}
           <FadeUp delay={0.2} y={30}>
             <h2 className="text-2xl md:text-[36px] lg:text-[42px] font-bold mb-6 md:mb-8 text-black tracking-tight">Get in Touch</h2>
             <form
               className="space-y-4"
-              onSubmit={(e) => {
-                e.preventDefault();
-                alert('Form submitted successfully!');
-              }}
+              onSubmit={handleFormSubmit}
             >
               <input
                 type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
                 required
                 placeholder="Name"
-                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none"
+                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none cursor-text disabled:opacity-50"
+                disabled={isSubmitting}
               />
               <input
                 type="tel"
+                name="mobile"
+                value={formData.mobile}
+                onChange={handleInputChange}
                 required
                 placeholder="Contact Number"
-                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none"
+                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none disabled:opacity-50"
+                disabled={isSubmitting}
               />
               <input
                 type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
                 required
                 placeholder="Email"
-                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none"
+                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 rounded-none disabled:opacity-50"
+                disabled={isSubmitting}
               />
               <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleInputChange}
                 placeholder="Message"
                 required
                 rows={4}
-                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 resize-none rounded-none"
+                className="w-full p-4 bg-white border-none focus:outline-none focus:ring-1 focus:ring-black transition-all text-base md:text-[18px] text-gray-800 placeholder-gray-400 resize-none rounded-none disabled:opacity-50"
+                disabled={isSubmitting}
               />
               <div className="pt-4 md:pt-6">
                 <button
                   type="submit"
-                  className="w-full bg-black text-white py-4 md:py-5 hover:bg-zinc-800 transition-all duration-300 text-sm md:text-base font-bold tracking-widest uppercase rounded-none"
+                  disabled={isSubmitting}
+                  className={`w-full py-4 md:py-5 transition-all duration-300 text-sm md:text-base font-bold bg-black tracking-widest uppercase rounded-none \${
+                    submitStatus === 'success' ? 'bg-green-600 text-white hover:bg-green-700' :
+                    submitStatus === 'error' ? 'bg-red-600 text-white hover:bg-red-700' :
+                    'bg-black text-white hover:bg-zinc-800 disabled:bg-gray-400'
+                  }`}
                 >
-                  SUBMIT
+                  {isSubmitting ? 'Sending...' :
+                    submitStatus === 'success' ? 'Sent ✓' :
+                      submitStatus === 'error' ? 'Error - Retry' :
+                        'SUBMIT'}
                 </button>
               </div>
             </form>
