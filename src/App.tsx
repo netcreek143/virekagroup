@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Instagram, Mail, MapPin } from 'lucide-react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
 import Lenis from 'lenis';
 
 // ─── Reusable fade-up wrapper ────────────────────────────────────────────────
@@ -14,11 +14,13 @@ function FadeUp({
   delay = 0,
   className = '',
   y = 40,
+  duration = 0.8,
 }: {
   children: React.ReactNode | React.ReactNode[];
   delay?: number;
   className?: string;
   y?: number;
+  duration?: number;
 }) {
   return (
     <motion.div
@@ -26,9 +28,62 @@ function FadeUp({
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
+      transition={{ duration, ease: [0.16, 1, 0.3, 1], delay }}
     >
       {children}
+    </motion.div>
+  );
+}
+
+// ─── Reusable 3D Tilt Image component ────────────────────────────────────────
+function TiltImage({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["3deg", "-3deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-3deg", "3deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      className={className}
+    >
+      <motion.img
+        src={src}
+        alt={alt}
+        className="w-full h-auto object-contain"
+        style={{
+          transform: "translateZ(50px)",
+        }}
+      />
     </motion.div>
   );
 }
@@ -128,14 +183,32 @@ export default function App() {
   const heroTextY = useTransform(scrollYProgress, [0, 1], ['0%', '10%']);
   const heroTextOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
 
+  // ── Navbar Scroll State ───────────────────────────────────────────────────
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 overflow-x-hidden">
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <header className="py-4 md:py-6 flex justify-center border-b border-gray-100 bg-white z-50">
+      <header
+        className={`fixed top-0 left-0 w-full flex justify-center border-b border-gray-100 z-[100] transition-all duration-300 ease-in-out ${isScrolled
+          ? 'py-3 bg-white/95 backdrop-blur-md shadow-md'
+          : 'py-4 md:py-6 bg-white'
+          }`}
+      >
         <img
           src="/images/virekalogo.png"
           alt="Vireka Group Logo"
-          className="h-10 md:h-14 w-auto object-contain"
+          className={`w-auto object-contain transition-all duration-300 ease-in-out ${isScrolled ? 'h-8 md:h-10' : 'h-10 md:h-14'
+            }`}
         />
       </header>
 
@@ -144,10 +217,18 @@ export default function App() {
         ref={heroRef}
         className="relative w-full overflow-hidden aspect-[3/3.8] md:aspect-[3456/1650] xl:aspect-[3456/1800]"
       >
+        {/* Desktop Image */}
         <motion.img
-          src="/images/virekaherosec.png"
+          src="/images/virekaherosec.jpg"
           alt="Vireka Group Hero Banner"
-          className="absolute inset-0 w-full h-full object-cover will-change-transform"
+          className="hidden lg:block absolute inset-0 w-full h-full object-cover will-change-transform"
+          style={{ y: heroImgY, scale: heroImgScale }}
+        />
+        {/* Mobile/Tablet Image */}
+        <motion.img
+          src="/images/virekaherosec.jpg"
+          alt="Vireka Group Hero Banner"
+          className="block lg:hidden absolute inset-0 w-full h-full object-cover will-change-transform"
           style={{ y: heroImgY, scale: heroImgScale }}
         />
         <div className="absolute inset-0 bg-black/10 z-[1]" />
@@ -172,25 +253,25 @@ export default function App() {
       {/* ── About Us ────────────────────────────────────────────────────────── */}
       <section className="flex flex-col md:flex-row items-stretch overflow-hidden">
         {/* Left – image */}
-        <FadeUp className="w-full md:w-1/2 flex relative bg-gray-50" y={60}>
-          <div className="w-full h-full relative aspect-[4/5] md:aspect-auto overflow-hidden">
-            <img
-              src="/images/foundersimg.png"
-              alt="Founders of Vireka Group"
-              className="w-full h-full object-cover transition-opacity duration-300"
-              onLoad={(e) => (e.currentTarget.style.opacity = '1')}
-              style={{ opacity: 0 }}
-            />
-          </div>
-          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 lg:px-24 lg:pb-16 text-white bg-gradient-to-t from-black/60 via-black/20 to-transparent">
-            <h3 className="text-2xl sm:text-3xl md:text-[32px] lg:text-[40px] font-bold leading-tight mb-2 tracking-tight">
-              Reka &amp; Vicky
-            </h3>
-            <p className="text-lg md:text-[20px] lg:text-[24px] font-light tracking-wide text-gray-200">
-              Founders of Vireka Group
-            </p>
-          </div>
-        </FadeUp>
+        <div className="w-full md:w-1/2 flex relative bg-[#0f2347] overflow-hidden">
+          <FadeUp className="w-full h-full flex flex-col relative" y={20} duration={0.4}>
+            <div className="w-full h-full relative aspect-[4/5] md:aspect-auto overflow-hidden">
+              <img
+                src="/images/foundersimg.png"
+                alt="Founders of Vireka Group"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 lg:px-24 lg:pb-16 text-white bg-gradient-to-t from-black/60 via-black/20 to-transparent">
+              <h3 className="text-2xl sm:text-3xl md:text-[32px] lg:text-[40px] font-bold leading-tight mb-2 tracking-tight">
+                Reka &amp; Vicky
+              </h3>
+              <p className="text-lg md:text-[20px] lg:text-[24px] font-light tracking-wide text-gray-200">
+                Founders of Vireka Group
+              </p>
+            </div>
+          </FadeUp>
+        </div>
 
         {/* Right – copy */}
         <FadeUp delay={0.2} className="w-full md:w-1/2 p-8 md:p-12 lg:p-20 xl:p-24 flex flex-col justify-center bg-white" y={40}>
@@ -226,7 +307,7 @@ export default function App() {
 
       {/* ── Founders' Philosophy ─────────────────────────────────────────────── */}
       <section
-        className="w-full bg-[#f2f2f2] overflow-hidden relative flex items-center py-28 sm:py-36 md:py-48 lg:py-0 lg:aspect-[3456/1200] xl:aspect-[3456/974]"
+        className="w-full bg-[#f2f2f2] overflow-hidden relative flex items-center py-4 sm:py-8 md:py-16 lg:py-0 lg:aspect-[3456/1200] xl:aspect-[3456/974]"
       >
         <img
           src="/images/fouphilsecbg.svg"
@@ -239,7 +320,7 @@ export default function App() {
         />
 
         {/* Proportional positioning that adapts across breakpoints */}
-        <div className="relative z-10 w-full px-6 sm:px-10 md:pl-[12%] lg:pl-[18%] md:pr-[10%] lg:-translate-y-[8%]">
+        <div className="relative z-10 w-full px-6 sm:px-10 md:pl-[12%] lg:pl-[18%] md:pr-[10%] lg:-translate-y-[28%]">
           <div className="w-full text-left max-w-xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
             <FadeUp>
               <h2 className="text-[#1A3673] text-[24px] sm:text-[30px] md:text-[clamp(1.6rem,3.8vw,2.6rem)] font-bold mb-3 sm:mb-4 md:mb-[0.4em] tracking-tight">
@@ -264,12 +345,14 @@ export default function App() {
           </p>
         </FadeUp>
 
-        <FadeUp delay={0.2} className="flex justify-center items-center w-full" y={60}>
-          <img
-            src="/images/virekaecosystem.png"
-            alt="Vireka Group Ecosystem"
-            className="w-full h-auto object-contain max-w-6xl lg:-mb-12 relative z-10"
-          />
+        <FadeUp delay={0.2} className="flex justify-center items-center w-full" y={60} duration={0.8}>
+          <div style={{ perspective: "1000px" }} className="w-full max-w-6xl lg:-mb-12 relative z-10">
+            <TiltImage
+              src="/images/virekaecosystem.png"
+              alt="Vireka Group Ecosystem"
+              className="w-full"
+            />
+          </div>
         </FadeUp>
       </section>
 
@@ -304,7 +387,7 @@ export default function App() {
             {
               src: '/images/mm3.png',
               alt: 'Celebratory',
-              title: 'Celebratory &amp; Emotional',
+              title: 'Celebratory & Emotional',
               body: 'A memorable musical moment at Saravanaa Bhavan! We were thrilled to host the sensational Sid Sriram, filling the air with energy, smiles, and unforgettable vibes.',
             },
           ].map((card, i) => (
