@@ -98,6 +98,16 @@ function TypingText({ text, className = "" }: { text: string; className?: string
     offset: ["start 0.95", "end 0.8"]
   });
 
+  const maxProgress = useMotionValue(0);
+
+  useEffect(() => {
+    return scrollYProgress.on("change", (latest) => {
+      if (latest > maxProgress.get()) {
+        maxProgress.set(latest);
+      }
+    });
+  }, [scrollYProgress, maxProgress]);
+
   const words = text.split(" ");
   const totalChars = text.length;
   let charIndexTracker = 0;
@@ -114,9 +124,9 @@ function TypingText({ text, className = "" }: { text: string; className?: string
               const end = (currentPos + 1) / totalChars;
 
               // eslint-disable-next-line react-hooks/rules-of-hooks
-              const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
+              const opacity = useTransform(maxProgress, [start, end], [0, 1]);
               // eslint-disable-next-line react-hooks/rules-of-hooks
-              const y = useTransform(scrollYProgress, [start, end], [10, 0]);
+              const y = useTransform(maxProgress, [start, end], [10, 0]);
 
               return (
                 <motion.span key={currentPos} style={{ opacity, y }} className="inline-block">
@@ -129,7 +139,7 @@ function TypingText({ text, className = "" }: { text: string; className?: string
               <motion.span
                 key={`space-${i}`}
                 style={{
-                  opacity: useTransform(scrollYProgress, [charIndexTracker / totalChars, (charIndexTracker + 1) / totalChars], [0, 1])
+                  opacity: useTransform(maxProgress, [charIndexTracker / totalChars, (charIndexTracker + 1) / totalChars], [0, 1])
                 }}
                 className="inline-block"
               >
