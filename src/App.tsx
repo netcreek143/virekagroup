@@ -414,7 +414,7 @@ export default function App() {
         <FadeUp delay={0.2} className="flex justify-center items-center w-full" y={60} duration={0.8}>
           <div style={{ perspective: "1000px" }} className="w-full max-w-6xl lg:-mb-12 relative z-10">
             <TiltImage
-              src="/images/oldeco.png"
+              src="/images/virekaecosystem.png"
               alt="Vireka Group Ecosystem"
               className="w-full"
             />
