@@ -251,7 +251,6 @@ export default function App() {
 
   // ── Navbar Scroll State ───────────────────────────────────────────────────
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isEcosystemPopupOpen, setIsEcosystemPopupOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -414,18 +413,11 @@ export default function App() {
 
         <FadeUp delay={0.2} className="flex justify-center items-center w-full" y={60} duration={0.8}>
           <div style={{ perspective: "1000px" }} className="w-full max-w-6xl lg:-mb-12 relative z-10">
-            <div
-              className="w-full cursor-pointer md:cursor-auto"
-              onClick={() => {
-                if (window.innerWidth < 768) setIsEcosystemPopupOpen(true);
-              }}
-            >
-              <TiltImage
-                src="/images/virekaecosystem.png"
-                alt="Vireka Group Ecosystem"
-                className="w-full"
-              />
-            </div>
+            <TiltImage
+              src="/images/virekaecosystem.png"
+              alt="Vireka Group Ecosystem"
+              className="w-full"
+            />
           </div>
         </FadeUp>
       </section>
@@ -608,29 +600,11 @@ export default function App() {
       </section >
 
       {/* ── Footer ──────────────────────────────────────────────────────────── */}
-      <footer className="bg-black text-gray-400 py-6 md:py-8 text-center px-6">
+      < footer className="bg-black text-gray-400 py-6 md:py-8 text-center px-6" >
         <p className="text-xs md:text-sm lg:text-base font-light tracking-wide">
           Copyright © 2026 <span className="text-white font-medium">Vireka Group</span> - All Rights Reserved.
         </p>
-      </footer>
-
-      {/* ── Mobile Popup for Ecosystem Image ───────────────────────────── */}
-      {isEcosystemPopupOpen && (
-        <div className="fixed inset-0 z-[200] bg-black/90 flex flex-col justify-center items-center p-4 md:hidden">
-          <button
-            className="absolute top-6 right-6 text-white hover:text-gray-300 bg-white/10 hover:bg-white/20 rounded-full w-10 h-10 flex items-center justify-center border border-white/20 transition-colors z-[210] text-lg"
-            onClick={() => setIsEcosystemPopupOpen(false)}
-            aria-label="Close"
-          >
-            ✕
-          </button>
-          <img
-            src="/images/virekaecosystem.png"
-            alt="Vireka Group Ecosystem Enlarged"
-            className="w-[95%] h-auto max-h-[90vh] object-contain rounded-lg"
-          />
-        </div>
-      )}
-    </div>
+      </footer >
+    </div >
   );
 }
